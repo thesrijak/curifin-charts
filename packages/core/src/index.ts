@@ -1,40 +1,62 @@
-// Types
-export * from './types/index.js'
+// ---- Public API for @curifin/core ----
 
-// Chart
-export * from './chart/Chart.js'
-export * from './chart/ChartOptions.js'
-export * from './chart/ChartLayout.js'
+// Types (re-exported as type-only for consumers)
+export type {
+  DeepPartial,
+  Point,
+  PixelPoint,
+  Rect,
+  Margin,
+  RgbaColor,
+  Color,
+} from './types/common.types.js'
 
-// Renderer
-export * from './renderer/Renderer.js'
-export * from './renderer/layers/GridLayer.js'
-export * from './renderer/layers/SeriesLayer.js'
-export * from './renderer/layers/OverlayLayer.js'
+export type {
+  OHLCVData,
+  LineData,
+  SeriesType,
+  LineStyle,
+  CandlestickSeriesOptions,
+  LineSeriesOptions,
+  AreaSeriesOptions,
+} from './types/series.types.js'
 
-// Series
-export * from './series/BaseSeries.js'
-export * from './series/CandlestickSeries.js'
-export * from './series/LineSeries.js'
-export * from './series/AreaSeries.js'
+export type {
+  ChartTheme,
+  CrosshairMode,
+  CrosshairLineOptions,
+  CrosshairOptions,
+  WatermarkOptions,
+  TimeScaleOptions,
+  PriceScaleOptions,
+  ChartOptions,
+  ChartOptionsInput,
+} from './types/chart.types.js'
 
-// Axes
-export * from './axes/TimeAxis.js'
-export * from './axes/PriceAxis.js'
+export type {
+  AxisLabel,
+  TimeRange,
+  PriceRange,
+} from './types/axis.types.js'
 
-// Scales
-export * from './scales/TimeScale.js'
-export * from './scales/PriceScale.js'
+// Chart — the main entry point
+export { Chart } from './chart/Chart.js'
 
-// Interaction
-export * from './interaction/InteractionManager.js'
-export * from './interaction/Crosshair.js'
+// Chart options and themes
+export {
+  DEFAULT_DARK_THEME,
+  DEFAULT_LIGHT_THEME,
+  DEFAULT_CHART_OPTIONS,
+  mergeChartOptions,
+} from './chart/ChartOptions.js'
 
-// Data
-export * from './data/DataStore.js'
-export * from './data/DataUtils.js'
+// Series classes
+export { CandlestickSeries } from './series/CandlestickSeries.js'
+export { LineSeries } from './series/LineSeries.js'
+export { AreaSeries } from './series/AreaSeries.js'
 
-// Utils
-export * from './utils/color.js'
-export * from './utils/math.js'
-export * from './utils/throttle.js'
+// Scales — exposed for power users who need direct access
+export { TimeScale } from './scales/TimeScale.js'
+export { PriceScale } from './scales/PriceScale.js'
+export type { VisibleBarRange } from './scales/TimeScale.js'
+export type { PriceScaleMode } from './scales/PriceScale.js'
