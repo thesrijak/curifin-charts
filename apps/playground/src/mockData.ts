@@ -1,4 +1,4 @@
-import type { OHLCVData } from '@curifin/core'
+import type { OHLCVData, LineData } from '@curifin/core'
 
 /**
  * Generates realistic OHLCV data using a random walk.
@@ -49,6 +49,49 @@ export function generateMockOHLCV(
     })
 
     price = close
+  }
+
+  return data
+}
+
+/**
+ * Generates line data (e.g. a moving average) from OHLCV data.
+ */
+export function generateMovingAverage(ohlcv: OHLCVData[], period = 20): LineData[] {
+  const result: LineData[] = []
+
+  for (let i = period - 1; i < ohlcv.length; i++) {
+    let sum = 0
+    for (let j = i - period + 1; j <= i; j++) {
+      sum += ohlcv[j]!.close
+    }
+    result.push({
+      time: ohlcv[i]!.time,
+      value: round(sum / period),
+    })
+  }
+
+  return result
+}
+
+/**
+ * Generates standalone line data using a random walk.
+ */
+export function generateMockLineData(
+  bars = 500,
+  startValue = 50,
+  intervalSeconds = 60,
+): LineData[] {
+  const data: LineData[] = []
+  const now = Math.floor(Date.now() / 1000)
+  const startTime = now - bars * intervalSeconds
+  let value = startValue
+
+  for (let i = 0; i < bars; i++) {
+    const time = startTime + i * intervalSeconds
+    const change = value * 0.005 * (Math.random() - 0.48)
+    value += change
+    data.push({ time, value: round(value) })
   }
 
   return data
