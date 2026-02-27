@@ -1,3 +1,4 @@
+import { Graphics } from 'pixi.js'
 import type { ChartOptions, ChartOptionsInput } from '../types/chart.types.js'
 import type { CandlestickSeriesOptions, LineSeriesOptions, AreaSeriesOptions } from '../types/series.types.js'
 import type { Rect } from '../types/common.types.js'
@@ -34,6 +35,7 @@ export class Chart {
   private _timeAxis!: TimeAxis
   private _priceAxis!: PriceAxis
   private _crosshair!: Crosshair
+  private _clipMask!: Graphics
   private _interaction = new InteractionManager()
   private _series = new Map<string, BaseSeries<unknown, object>>()
   private _container: HTMLElement
@@ -100,7 +102,11 @@ export class Chart {
     this._timeScale.setContainerWidth(width)
     this._priceScale.setContainerHeight(height)
 
-    // 3. Layers are created by the renderer
+    // 3. Create clip mask for chart pane (prevents series/grid bleeding into axes)
+    this._clipMask = new Graphics()
+    this._renderer.gridLayer.mask = this._clipMask
+    this._renderer.seriesLayer.mask = this._clipMask
+    this._renderer.overlayLayer.mask = this._clipMask
 
     // 4. Create axes
     this._timeAxis = new TimeAxis(opts.theme.textColor, opts.theme.borderColor)
@@ -358,6 +364,10 @@ export class Chart {
     // Position grid layer
     this._renderer.gridLayer.x = pane.x
     this._renderer.gridLayer.y = pane.y
+
+    // Update clip mask to chart pane bounds (absolute stage coordinates)
+    this._clipMask.clear()
+    this._clipMask.rect(pane.x, pane.y, pane.width, pane.height).fill({ color: 0xffffff })
 
     // Series
     this._renderer.seriesLayer.x = pane.x
