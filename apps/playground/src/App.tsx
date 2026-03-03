@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   CurifinChart,
   CandleSeries,
@@ -155,14 +155,14 @@ function AreaChartHookExample({ data }: { data: LineData[] }) {
   const { chart } = useChart(containerRef, chartOptions)
 
   // Use the core AreaSeries via the Chart imperative API
-  useMemo(() => {
+  useEffect(() => {
     if (!chart) return
     const series = chart.addAreaSeries({
       color: '#26a69a',
       lineWidth: 2,
       topColor: '#26a69a',
       bottomColor: '#26a69a',
-      fillOpacity: 0.3,
+      fillOpacity: 0.28,
     })
     series.setData(data)
     return () => chart.removeSeries(series)
