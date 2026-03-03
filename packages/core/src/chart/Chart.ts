@@ -98,9 +98,8 @@ export class Chart {
       backgroundColor: opts.theme.backgroundColor,
     })
 
-    // 2. Set scale dimensions
-    this._timeScale.setContainerWidth(width)
-    this._priceScale.setContainerHeight(height)
+    // 2. Set scale dimensions to the chart pane (not full canvas)
+    this._updateScaleDimensions(width, height)
 
     // 3. Create clip mask for chart pane (prevents series/grid bleeding into axes)
     this._clipMask = new Graphics()
@@ -241,8 +240,7 @@ export class Chart {
   resize(width: number, height: number): void {
     this._whenReady(() => {
       this._renderer.resize(width, height)
-      this._timeScale.setContainerWidth(width)
-      this._priceScale.setContainerHeight(height)
+      this._updateScaleDimensions(width, height)
       this._scheduleRender()
     })
   }
@@ -424,6 +422,19 @@ export class Chart {
   }
 
   // -- Helpers --
+
+  private _updateScaleDimensions(totalWidth: number, totalHeight: number): void {
+    const layout = computeLayout(
+      totalWidth,
+      totalHeight,
+      this._options.priceScale.position,
+      this._options.priceScale.visible,
+      this._options.timeScale.visible,
+      this._options.layout,
+    )
+    this._timeScale.setContainerWidth(layout.chartPane.width)
+    this._priceScale.setContainerHeight(layout.chartPane.height)
+  }
 
   private _computeLayout() {
     const size = this._renderer.getSize()
